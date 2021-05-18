@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Management</title>
+    <th:block th:insert="~{fragments/header :: link}"></th:block>
+    <th:block th:insert="~{fragments/header :: head/script}"></th:block>
+
+</head>
+<body>
+<div>
+    <div th:insert="~{fragments/header :: menu}"></div>
+    <div class="container">
+        <div class="row my-4">
+            <div class="col-md-12">
+                <a th:href="@{/customers/create}" class="btn btn-primary">+ New Customer</a>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col-md-12">
+                <table class="table table-striped" id="customer_table">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Cmnd</th>
+                        <th>Birthday</th>
+                        <th>Household</th>
+                        <th>Phone</th>
+                        <th>Address</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="customer : ${customers}">
+                        <td th:text="${customer.name}">Name</td>
+                        <td th:text="${customer.cmnd}">Cmnd</td>
+                        <td th:text="${customer.birthday}">Birthday</td>
+                        <td th:text="${customer.household}">Household</td>
+                        <td th:text="${customer.phone}">Phone</td>
+                        <td th:text="${customer.address}">Address</td>
+                        <td><a th:href="@{/customers/edit/{id}(id=${customer.id})}">Edit</a> | <a th:href="@{/customers/delete/{id}(id=${customer.id})}">Delete</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script>
+  $(document).ready(function(){
+    $('#customer_table').DataTable();
+  });
+</script>
+</body>
+</html>

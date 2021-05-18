@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Customer</title>
+    <th:block th:insert="~{fragments/header :: link}"></th:block>
+    <th:block th:insert="~{fragments/header :: head/script}"></th:block>
+</head>
+<body>
+<div th:insert="~{fragments/header :: menu}"></div>
+
+    <div class="container">
+        <div class="row my-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <form th:object="${customer}" th:action="@{create}" method="post">
+                    <div class="card-header">Customer Info</div>
+                    <div class="card-body">
+                            <div class="row">
+                                <div class="col-12 col-md-4 form-group">
+                                    <label class="form-label">Ho va Ten</label><br/>
+                                    <input type="text" placeholder="name" th:field="*{name}" class="form-control"/>
+                                    <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></span>
+                                </div>
+                                <div class="col-12 col-md-4 form-group">
+                                    <label class="form-label">Cmnd</label><br/>
+                                    <input type="number" placeholder="cmnd" th:field="*{cmnd}" class="form-control"/>
+                                </div>
+                                <div class="col-12 col-md-4 form-group">
+                                    <label class="form-label">Ngay sinh</label><br/>
+                                    <input type="text" id="birthday" placeholder="birthday" th:field="*{birthday}" class="form-control"/>
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 col-md-4 form-group">
+                                    <label class="form-label">Ho khau</label><br/>
+                                    <input type="text" placeholder="household" th:field="*{household}" class="form-control"/>
+                                </div>
+                                <div class="col-12 col-md-4 form-group">
+                                    <label class="form-label">So dien thoai</label><br/>
+                                    <input type="number" placeholder="phone" th:field="*{phone}" class="form-control"/>
+                                </div>
+                                <div class="col-12 col-md-4 form-group">
+                                    <label class="form-label">Dia chi</label><br/>
+                                    <input type="text" placeholder="address" th:field="*{address}" class="form-control"/>
+                                </div>
+                            </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button class="btn btn-success" type="submit">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/js/datepicker-config.js"></script>
+
+</body>
+</html>

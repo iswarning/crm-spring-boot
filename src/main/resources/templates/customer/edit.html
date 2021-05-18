@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Customer</title>
+  <th:block th:insert="~{fragments/header :: link}"></th:block>
+  <th:block th:insert="~{fragments/header :: head/script}"></th:block>
+
+</head>
+<body>
+<div>
+  <div th:insert="~{fragments/header :: menu}"></div>
+
+  <div class="container">
+    <div class="row my-4">
+      <div class="col-md-12">
+        <div class="card">
+          <form action="#"
+                th:object="${customer}"
+                th:action="@{/customers/update/{id}(id=${customer.id})}"
+                method="post">
+          <div class="card-header">Customer Info</div>
+          <div class="card-body">
+              <div class="row">
+                <div class="col-12 col-md-4 form-group">
+                  <label class="form-label">Ho va Ten</label><br/>
+                  <input type="text" th:value="${customer.name}" th:field="*{name}" class="form-control"/>
+                  <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-red-600"></span>
+                </div>
+                <div class="col-12 col-md-4 form-group">
+                  <label class="form-label">Cmnd</label><br/>
+                  <input type="number" th:value="${customer.cmnd}" th:field="*{cmnd}" class="form-control"/>
+                </div>
+                <div class="col-12 col-md-4 form-group">
+                  <label class="form-label">Ngay sinh</label><br/>
+                  <input type="text" id="birthday" th:value="${customer.birthday}" th:field="*{birthday}" class="form-control"/>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12 col-md-4 form-group">
+                  <label class="form-label">Ho khau</label><br/>
+                  <input type="text" th:value="${customer.household}" th:field="*{household}" class="form-control"/>
+                </div>
+                <div class="col-12 col-md-4 form-group">
+                  <label class="form-label">So dien thoai</label><br/>
+                  <input type="number" th:value="${customer.phone}" th:field="*{phone}" class="form-control"/>
+                </div>
+                <div class="col-12 col-md-4 form-group">
+                  <label class="form-label">Dia chi</label><br/>
+                  <input type="text" th:value="${customer.address}" th:field="*{address}" class="form-control"/>
+                </div>
+              </div>
+          </div>
+          <div class="card-footer">
+            <div class="row">
+              <div class="col-md-12">
+                <button class="btn btn-success" type="submit">Save</button>
+              </div>
+            </div>
+          </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+    <br/>
+    <div class="row my-4">
+      <div class="col-md-12">
+        <a th:href="@{/customers/edit/{customerId}/contracts/create(customerId=${customer.id})}" class="btn btn-primary">+ New Contract</a>
+      </div>
+    </div>
+    <div class="row my-4">
+      <div class="col-sm-6 col-md-12">
+        <table class="table table-striped" id="contract_table">
+          <thead>
+            <tr>
+              <th>1</th>
+              <th>2</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody th:if="${contractsByCustomer}">
+            <tr th:each="contract : ${contractsByCustomer}">
+              <td th:text="${contract.lotNumber}"></td>
+              <td th:text="${contract.contractNo}"></td>
+              <td>
+                <a th:href="@{/customers/edit/{customerId}/contracts/edit/{contractId}(customerId=${customer.id}, contractId=${contract.id})}" class="btn btn-primary">Edit</a>
+                <a th:href="@{/customers/edit/{customerId}/contracts/delete/{contractId}(customerId=${customer.id}, contractId=${contract.id})}" class="btn btn-danger">Delete</a>
+              </td>
+            </tr>
+          </tbody>
+          <tbody th:if="${contractsByCustomer == null}">
+            <tr>
+              <td colspan="5" class="text-center">Empty</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/datepicker.js"></script>
+  <script>
+  $(document).ready(function(){
+    $('#contract_table').DataTable(
+    );
+  });
+</script>
+</div>
+</body>
+</html>

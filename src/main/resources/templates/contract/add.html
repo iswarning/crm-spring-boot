@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <th:block th:insert="~{fragments/header :: link}"></th:block>
+  <th:block th:insert="~{fragments/header :: head/script}"></th:block>
+
+</head>
+<body>
+<div th:insert="~{fragments/header :: menu}"></div>
+
+<div class="container">
+  <form th:action="@{${currentUrl}}" th:object="${contract}" method="post">
+
+    <div class="row my-4">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">Contract Info</div>
+          <div class="card-body">
+
+            <div class="row">
+              <div class="col-12 col-sm-6 col-md-4 form-group">
+                <label>contract_no</label><br/>
+                <input type="text" class="form-control" th:field="*{contractNo}"/>
+                <span th:if="${#fields.hasErrors('contractNo')}" th:errors="*{contractNo}" class="text-danger"></span>
+              </div>
+              <div class="col-12 col-sm-6 col-md-4 form-group">
+                <label>area_signed</label><br/>
+                <input type="number" class="form-control" th:field="*{areaSigned}"/>
+                <span th:if="${#fields.hasErrors('areaSigned')}" th:errors="*{areaSigned}" class="text-danger"></span>
+              </div>
+              <div class="col-12 col-sm-6 col-md-4 form-group">
+                <label>type</label><br/>
+                <input type="text" class="form-control"  th:field="*{type}"/>
+                <span th:if="${#fields.hasErrors('type')}" th:errors="*{type}" class="text-danger"></span>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12 col-sm-6 col-md-4 form-group">
+                <label>lot_number</label><br/>
+                <input type="text" class="form-control" th:field="*{lotNumber}"/>
+                <span th:if="${#fields.hasErrors('lotNumber')}" th:errors="*{lotNumber}" class="text-danger"></span>
+              </div>
+              <div class="col-12 col-sm-6 col-md-4 form-group">
+                <label>value</label><br/>
+                <input type="number" class="form-control" th:field="*{value}"/>
+                <span th:if="${#fields.hasErrors('value')}" th:errors="*{value}" class="text-danger"></span>
+              </div>
+              <div class="col-12 col-sm-6 col-md-4 form-group">
+                <label>signed_date</label><br/>
+                <input id="signed_date" type="text" class="form-control" th:field="*{signedDate}"/>
+                <span th:if="${#fields.hasErrors('signedDate')}" th:errors="*{signedDate}" class="text-danger"></span>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12 col-sm-6 col-md-4 form-group">
+                <label>status</label><br/>
+                <select th:field="*{status}" class="form-control">
+                  <option th:each="s, i : ${status}" th:value="${i.index}"  th:text="${s}" ></option>
+                </select>
+              </div>
+              <div class="col-12 col-sm-6 col-md-4 form-group">
+                <label>Choose Project</label><br/>
+                <select th:field="*{project}" class="form-control">
+                  <option th:each="p : ${projects}" th:text="${p.name}" th:value="${p.id}"></option>
+                </select>
+              </div>
+              <div class="col-12 col-sm-6 col-md-4 form-group">
+                <label>status_created_by</label><br/>
+                <select th:field="*{statusCreatedBy}" class="form-control">
+                  <option th:each="s, i : ${statusCreated}"  th:text="${s}" th:value="${i.index}"></option>
+                </select>
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-12 col-sm-6 col-md-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="flexCheckDefault" th:field="*{signed}">
+                  <label class="form-check-label" for="flexCheckDefault">
+                    Signed
+                  </label>
+
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row my-4">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">Payment Info</div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-12 col-sm-6 col-md-4 form-group">
+                <label>payment_progress</label><br/>
+                <input type="number" class="form-control" th:field="*{payment.paymentProgress}"/>
+                <span th:if="${#fields.hasErrors('payment.paymentProgress')}" th:errors="*{payment.paymentProgress}" class="text-danger"></span>
+              </div>
+              <div class="col-12 col-sm-6 col-md-4 form-group">
+                <label>payment_date_95</label><br/>
+                <input id="payment_date_95" type="text" class="form-control"  th:field="*{payment.paymentDate95}"/>
+              </div>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <div class="row my-4">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">Juridical Info</div>
+          <div class="card-body" >
+              <div class="row">
+                <div class="col-12 col-sm-6 col-md-4 form-group">
+                  <label>contract_info</label><br/>
+                  <select th:field="*{juridical.contractInfo}" id="contractInfo" class="form-control">
+                    <option th:each="s, i : ${contractInfo}"  th:text="${s}" th:value="${i.index}"></option>
+                  </select>
+                </div>
+                <div class="col-12 col-sm-6 col-md-4 form-group">
+                  <label>status</label><br/>
+                  <input type="text" class="form-control" th:field="*{juridical.contractStatus}"/>
+                  <span th:if="${#fields.hasErrors('juridical.contractStatus')}" th:errors="*{juridical.contractStatus}" class="text-danger"></span>
+                </div>
+                <div class="col-12 col-sm-6 col-md-4 form-group">
+                  <label>notarized_date</label><br/>
+                  <input type="text" id="notarized_date" class="form-control" th:field="*{juridical.notarizedDate}"/>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-12 col-sm-6 col-md-4 form-group">
+                  <label>registration_procedures</label><br/>
+                  <input type="text" class="form-control" th:field="*{juridical.registrationProcedures}"/>
+                  <span th:if="${#fields.hasErrors('juridical.registrationProcedures')}" th:errors="*{juridical.registrationProcedures}" class="text-danger"></span>
+
+                </div>
+                <div class="col-12 col-sm-6 col-md-4 form-group">
+                  <label>delivery_book_date</label><br/>
+                  <input type="text" id="delivery_book_date" class="form-control" th:field="*{juridical.deliveryBookDate}"/>
+                </div>
+                <div class="col-12 col-sm-6 col-md-4 form-group">
+                  <label>bill_profile</label><br/>
+                  <input type="text" class="form-control" th:field="*{juridical.billProfile}"/>
+                </div>
+              </div>
+
+              <div class="row">
+
+                <div class="col-12 col-sm-6 col-md-4 form-group">
+                  <label>book_holder</label><br/>
+                  <select th:field="*{juridical.bookHolder}" class="form-control">
+                    <option th:each="s, i : ${bookHolder}"  th:text="${s}" th:value="${i.index}"></option>
+                  </select>
+                </div>
+                <div class="col-12 col-sm-6 col-md-4 form-group">
+                  <label>delivery_land_date</label><br/>
+                  <input type="text" id="delivery_land_date" class="form-control" th:field="*{juridical.deliveryLandDate}"/>
+                </div>
+                <div class="col-12 col-sm-6 col-md-4 form-group">
+                  <label>commitment</label><br/>
+                  <input type="text" class="form-control" th:field="*{juridical.commitment}"/>
+                </div>
+              </div>
+
+              <div class="row">
+
+                <div class="col-12 col-sm-6 col-md-4">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="liquidation" th:field="*{juridical.liquidation}">
+                    <label class="form-check-label" for="liquidation">
+                      liquidation
+                    </label>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="row my-4">
+      <div class="col-md-12">
+        <button type="submit" class="btn btn-success">Save</button>
+      </div>
+    </div>
+
+  </form>
+</div>
+
+<script src="/js/datepicker-config.js"></script>
+</body>
+</html>
