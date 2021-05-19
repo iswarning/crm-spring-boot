@@ -20,12 +20,12 @@ public class CustomerApiController {
     private CustomerService customerService;
 
     @RequestMapping
-    public ResponseEntity<Iterable<Customer>> index(){
+    public ResponseEntity<List<Customer>> index(){
         try {
-            return new ResponseEntity<Iterable<Customer>>(customerService.getAllCustomers(), HttpStatus.OK);
+            return new ResponseEntity<>(customerService.getAllCustomers(), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<Iterable<Customer>>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 

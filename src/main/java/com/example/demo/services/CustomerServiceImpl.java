@@ -18,8 +18,13 @@ public class CustomerServiceImpl implements CustomerService{
     private CustomerRepository customerRepository;
 
     @Override
-    public Iterable<Customer> getAllCustomers() {
+    public List<Customer> getAllCustomers() {
         return customerRepository.findAll();
+    }
+
+    @Override
+    public List<Customer> searchCustomer(String querySearch) {
+        return customerRepository.searchCustomer(querySearch);
     }
 
     @Override

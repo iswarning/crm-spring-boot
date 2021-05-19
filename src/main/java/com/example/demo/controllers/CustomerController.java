@@ -1,20 +1,21 @@
 package com.example.demo.controllers;
 
 import com.example.demo.entities.Customer;
+import com.example.demo.export.CustomerExcelExport;
 import com.example.demo.services.ContractService;
 import com.example.demo.services.CustomerService;
-import com.example.demo.validator.DateValidator;
-import com.example.demo.validator.DateValidatorUsingLocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Optional;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 @Controller
 @RequestMapping("/customers")
@@ -27,9 +28,30 @@ public class CustomerController {
     private ContractService contractService;
 
     @GetMapping("/list")
-    public String index(Model model){
-        Iterable<Customer> customers = this.customerService.getAllCustomers();
+    public String index(Model model) {
+
+        List<Customer> customers = this.customerService.getAllCustomers();
+
         model.addAttribute("customers", customers);
+
+        model.addAttribute("query", "");
+        return "customer/index";
+    }
+
+    @GetMapping("/search")
+    public String search(Model model,@RequestParam(name = "query", required = false) String query){
+        List<Customer> customers = null;
+        if(query != null && !query.trim().isEmpty()){
+            try {
+                customers = customerService.searchCustomer(query);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        } else {
+            customers = customerService.getAllCustomers();
+        }
+        model.addAttribute("customers", customers);
+        model.addAttribute("query", query);
         return "customer/index";
     }
 
@@ -41,9 +63,6 @@ public class CustomerController {
 
     @PostMapping("/create")
     public String store(@Valid Customer customer, BindingResult result, Model model){
-
-//        if(result.hasErrors()) return "customer/add";
-
         this.customerService.save(customer);
         return "redirect:/customers/list";
     }
@@ -70,5 +89,29 @@ public class CustomerController {
     public String delete(@PathVariable("id") int id){
         customerService.deleteCustomer(id);
         return "redirect:/customers/list";
+    }
+
+    @GetMapping("/export/excel")
+    private void exportToExcel(@RequestParam(name = "query", required = false) String query,
+                               HttpServletResponse response ) throws IOException {
+
+        List<Customer> customers = null;
+
+        if(query != null && !query.trim().isEmpty())
+            customers = customerService.searchCustomer(query);
+        else
+            customers = customerService.getAllCustomers();
+
+        response.setContentType("application/octet-stream");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        String currentDateTime = dateFormat.format(new Date());
+
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=customers_" + currentDateTime + ".xlsx";
+        response.setHeader(headerKey, headerValue);
+
+        CustomerExcelExport customerExcelExport = new CustomerExcelExport(customers);
+
+        customerExcelExport.export(response);
     }
 }

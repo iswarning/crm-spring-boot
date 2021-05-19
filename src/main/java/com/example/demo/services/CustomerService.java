@@ -8,7 +8,9 @@ import java.util.Optional;
 
 public interface CustomerService {
 
-    Iterable<Customer> getAllCustomers();
+    List<Customer> getAllCustomers();
+
+    List<Customer> searchCustomer(String querySearch);
 
     Customer getCustomerById(int id);
 
