@@ -42,5 +42,20 @@ $(document).ready(function(){
                 datepicker.setDefaults( datepicker.regional.vi );
                 return datepicker.regional.vi;
             } ) );
+
+
+$("#saveCustomer").on("click",function(event){
+    event.preventDefault();
+    var birthday = $("#birthday").val();
+    if(!Date.parse(birthday)) {
+        $("#errorBirthday").show();
+    } else {
+        $("#customerForm").submit();
+    }
 });
+
+
+});
+
+
 

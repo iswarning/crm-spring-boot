@@ -47,7 +47,7 @@ public class CustomerApiController {
             produces = { MimeTypeUtils.APPLICATION_JSON_VALUE })
     public ResponseEntity<Customer> show(@PathVariable("id") int id){
         try {
-            return new ResponseEntity<Customer>(customerService.getCustomerById(id), HttpStatus.OK);
+            return new ResponseEntity<Customer>(customerService.getCustomerById(id).get(), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<Customer>(HttpStatus.BAD_REQUEST);

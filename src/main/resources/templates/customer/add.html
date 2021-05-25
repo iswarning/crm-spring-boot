@@ -13,7 +13,7 @@
         <div class="row my-4">
             <div class="col-md-12">
                 <div class="card">
-                    <form th:object="${customer}" th:action="@{create}" method="post">
+                    <form th:object="${customer}" th:action="@{create}" method="post" id="customerForm">
                     <div class="card-header">Customer Info</div>
                     <div class="card-body">
                             <div class="row">
@@ -28,8 +28,8 @@
                                 </div>
                                 <div class="col-12 col-md-4 form-group">
                                     <label class="form-label">Ngay sinh</label><br/>
-                                    <input type="text" id="birthday" placeholder="birthday" th:field="*{birthday}" class="form-control"/>
-
+                                    <input type="text" id="birthday" placeholder="yyyy-mm-dd" th:field="*{birthday}" class="form-control"/>
+                                    <span class="text-danger" style="display:none" id="errorBirthday">Invalid birthday</span>
                                 </div>
                             </div>
                             <div class="row">
@@ -50,7 +50,7 @@
                     <div class="card-footer">
                         <div class="row">
                             <div class="col-md-12">
-                                <button class="btn btn-success" type="submit">Save</button>
+                                <button class="btn btn-success" type="submit" id="saveCustomer">Save</button>
                             </div>
                         </div>
                     </div>

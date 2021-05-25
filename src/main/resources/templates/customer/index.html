@@ -13,21 +13,31 @@
     <div th:insert="~{fragments/header :: menu}"></div>
     <div class="container">
         <div class="row my-4">
-            <div class="col-md-4">
+            <div class="col-md-2">
                 <a th:href="@{/customers/create}" class="btn btn-primary">+ New Customer</a>
             </div>
             <div class="col-md-4">
                 <form method="GET" th:action="@{/customers/search}">
-                    <div class="form-group">
-                        <input type="text" name="query" th:value="${query}"/>
-                        <button type='submit' class="btn btn-success">Search</button>
+                    <div class="form-group row">
+                        <div class="col-md-8">
+                            <input type="text" name="query" th:value="${query}" class="form-control"/>
+                        </div>
+                        <div class="col-md-4">
+                            <button type='submit' class="btn btn-success">Search</button>
+                        </div>
                     </div>
                 </form>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-2">
                 <form method="GET" th:action="@{/customers/export/excel}">
                     <input type="hidden" th:value="${query}" name="query"/>
                     <button type='submit' class="btn btn-success">Export To Excel</button>
+                </form>
+            </div>
+            <div class="col-md-2">
+                <form method="GET" th:action="@{/customers/export/pdf}">
+                    <input type="hidden" th:value="${query}" name="query"/>
+                    <button type='submit' class="btn btn-success">Export To Pdf</button>
                 </form>
             </div>
         </div>
@@ -62,10 +72,6 @@
 
     </div>
 </div>
-<script>
-  $(document).ready(function(){
-    $('#customer_table').DataTable();
-  });
-</script>
+
 </body>
 </html>

@@ -18,7 +18,8 @@
           <form action="#"
                 th:object="${customer}"
                 th:action="@{/customers/update/{id}(id=${customer.id})}"
-                method="post">
+                method="post"
+                id="customerForm">
           <div class="card-header">Customer Info</div>
           <div class="card-body">
               <div class="row">
@@ -34,6 +35,7 @@
                 <div class="col-12 col-md-4 form-group">
                   <label class="form-label">Ngay sinh</label><br/>
                   <input type="text" id="birthday" th:value="${customer.birthday}" th:field="*{birthday}" class="form-control"/>
+                  <span class="text-danger" id="errorBirthday" style="display:none">Invalid birthday</span>
                 </div>
               </div>
               <div class="row">
@@ -54,7 +56,7 @@
           <div class="card-footer">
             <div class="row">
               <div class="col-md-12">
-                <button class="btn btn-success" type="submit">Save</button>
+                <button class="btn btn-success" type="submit" id="saveCustomer">Save</button>
               </div>
             </div>
           </div>
@@ -99,13 +101,10 @@
     </div>
   </div>
 
-  <script src="/js/datepicker.js"></script>
-  <script>
-  $(document).ready(function(){
-    $('#contract_table').DataTable(
-    );
-  });
-</script>
 </div>
+
+
+<script th:src="@{ /js/datepicker-config.js }"></script>
+
 </body>
 </html>

@@ -1,21 +1,33 @@
 package com.example.demo.controllers;
 
+import com.example.demo.config.MyUserDetails;
 import com.example.demo.entities.Customer;
 import com.example.demo.export.CustomerExcelExport;
+import com.example.demo.export.CustomerPdfExport;
 import com.example.demo.services.ContractService;
 import com.example.demo.services.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
+
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.security.Principal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @RequestMapping("/customers")
@@ -28,11 +40,22 @@ public class CustomerController {
     private ContractService contractService;
 
     @GetMapping("/list")
-    public String index(Model model) {
+    public String index(Model model,
+                        @RequestParam(value = "page",required = false, defaultValue = "1") Integer page,
+                        @RequestParam(value = "size", required = false, defaultValue = "5") Integer size,
+                        @RequestParam(value = "sort", required = false, defaultValue = "ASC") String sort
+                        ) {
 
-        List<Customer> customers = this.customerService.getAllCustomers();
+        Sort sortable = null;
 
-        model.addAttribute("customers", customers);
+        if(sort.equals("ASC")) sortable = Sort.by("id").ascending();
+
+        if(sort.equals("DESC")) sortable = Sort.by("id").descending();
+
+        assert sortable != null;
+        Pageable pageable = PageRequest.of(page, size, sortable);
+
+        model.addAttribute("customers", customerService.getCustomerPaginate(pageable));
 
         model.addAttribute("query", "");
         return "customer/index";
@@ -69,20 +92,10 @@ public class CustomerController {
 
     @GetMapping("/edit/{id}")
     public String show(Model model, @PathVariable("id") int id){
-        Customer customer = customerService.getCustomerById(id);
+        Customer customer = customerService.getCustomerById(id).get();
         model.addAttribute("contractsByCustomer", contractService.getAllContractByCustomerId(id));
         model.addAttribute("customer",customer);
         return "customer/edit";
-    }
-
-    @PostMapping("/update/{id}")
-    public String update(@PathVariable("id") int id, @Valid Customer customer, BindingResult result){
-        if(result.hasErrors()){
-            customer.setId(id);
-            return "customer/edit";
-        }
-        customerService.save(customer);
-        return "redirect:/customers/list";
     }
 
     @GetMapping("/delete/{id}")
@@ -92,10 +105,10 @@ public class CustomerController {
     }
 
     @GetMapping("/export/excel")
-    private void exportToExcel(@RequestParam(name = "query", required = false) String query,
+    public void exportToExcel(@RequestParam(name = "query", required = false) String query,
                                HttpServletResponse response ) throws IOException {
 
-        List<Customer> customers = null;
+        List<Customer> customers;
 
         if(query != null && !query.trim().isEmpty())
             customers = customerService.searchCustomer(query);
@@ -113,5 +126,29 @@ public class CustomerController {
         CustomerExcelExport customerExcelExport = new CustomerExcelExport(customers);
 
         customerExcelExport.export(response);
+    }
+
+    @GetMapping("/export/pdf")
+    public void exportToPdf(@RequestParam(name = "query", required = false) String query,
+                                HttpServletResponse response ) throws IOException {
+
+        List<Customer> customers;
+
+        if(query != null && !query.trim().isEmpty())
+            customers = customerService.searchCustomer(query);
+        else
+            customers = customerService.getAllCustomers();
+
+        response.setContentType("application/pdf");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        String currentDateTime = dateFormat.format(new Date());
+
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=customers_" + currentDateTime + ".pdf";
+        response.setHeader(headerKey, headerValue);
+
+        CustomerPdfExport customerPdfExport = new CustomerPdfExport(customers);
+
+        customerPdfExport.export(response);
     }
 }

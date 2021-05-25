@@ -31,6 +31,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -70,14 +71,14 @@ public class ContractController {
                         @PathVariable("customerId") int customerId,
                         Model model,
                         HttpServletRequest request){
-
+        result.get
         if(result.hasErrors()){
             this.modelDuplicate(model, customerId);
             model.addAttribute("currentUrl", request.getRequestURL().toString());
             return "contract/add";
         }
 
-        Customer customer = customerService.getCustomerById(customerId);
+        Customer customer = customerService.getCustomerById(customerId).get();
         contract.setCustomer(customer);
         contractService.save(contract);
 
