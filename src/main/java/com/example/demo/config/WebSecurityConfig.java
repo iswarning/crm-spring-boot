@@ -1,5 +1,6 @@
 package com.example.demo.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -9,10 +10,14 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
 
     @Bean
     public UserDetailsService userDetailsService(){
@@ -27,7 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public DaoAuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailsService());
+        authenticationProvider.setUserDetailsService(userDetailsService);
         authenticationProvider.setPasswordEncoder(passwordEncoder());
         return authenticationProvider;
     }
@@ -39,15 +44,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected  void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers("/customers/**").hasAnyAuthority("ADMIN")
-                .anyRequest().authenticated()
+        http.cors()
                 .and()
-                .formLogin().defaultSuccessUrl("/customers").permitAll()
+                .authorizeRequests()
+                    .antMatchers("/customers/**").hasAnyAuthority("ADMIN")
+                    .anyRequest().authenticated()
                 .and()
-                .logout().permitAll()
+                    .formLogin().defaultSuccessUrl("/jwt").permitAll()
                 .and()
-                .exceptionHandling().accessDeniedPage("/403");
+                    .logout().permitAll()
+                .and()
+                    .exceptionHandling().accessDeniedPage("/login");
     }
 
 }

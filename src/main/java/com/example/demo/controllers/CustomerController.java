@@ -1,25 +1,18 @@
 package com.example.demo.controllers;
 
-import com.example.demo.config.MyUserDetails;
 import com.example.demo.entities.Customer;
 import com.example.demo.export.CustomerExcelExport;
 import com.example.demo.export.CustomerPdfExport;
 import com.example.demo.services.ContractService;
 import com.example.demo.services.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -91,9 +84,20 @@ public class CustomerController {
     }
 
     @GetMapping("/edit/{id}")
-    public String show(Model model, @PathVariable("id") int id){
-        Customer customer = customerService.getCustomerById(id).get();
-        model.addAttribute("contractsByCustomer", contractService.getAllContractByCustomerId(id));
+    public String show(Model model, @PathVariable("id") String id){
+        int parseStringToInt = 0;
+        Customer customer;
+
+        try {
+            parseStringToInt = Integer.parseInt(id);
+            customer = customerService.getCustomerById(parseStringToInt).get();
+        } catch (Exception e){
+            e.printStackTrace();
+            model.addAttribute("message", "Not found customer with id: " + id);
+            return "404";
+        }
+
+        model.addAttribute("contractsByCustomer", contractService.getAllContractByCustomerId(parseStringToInt));
         model.addAttribute("customer",customer);
         return "customer/edit";
     }
