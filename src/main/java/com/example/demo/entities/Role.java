@@ -1,5 +1,6 @@
 package com.example.demo.entities;
 
+import com.example.demo.common.ERole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,5 +18,6 @@ public class Role {
     @Column(name = "role_id")
     private Integer id;
 
-    private String name;
+    @Enumerated(EnumType.STRING)
+    private ERole name;
 }

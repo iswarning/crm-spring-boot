@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -57,7 +58,7 @@ public class CustomerController {
     @GetMapping("/search")
     public String search(Model model,@RequestParam(name = "query", required = false) String query){
         List<Customer> customers = null;
-        if(query != null && !query.trim().isEmpty()){
+        if(StringUtils.hasText(query)){
             try {
                 customers = customerService.searchCustomer(query);
             } catch (Exception e){
@@ -114,7 +115,7 @@ public class CustomerController {
 
         List<Customer> customers;
 
-        if(query != null && !query.trim().isEmpty())
+        if(StringUtils.hasText(query))
             customers = customerService.searchCustomer(query);
         else
             customers = customerService.getAllCustomers();
@@ -138,7 +139,7 @@ public class CustomerController {
 
         List<Customer> customers;
 
-        if(query != null && !query.trim().isEmpty())
+        if(StringUtils.hasText(query))
             customers = customerService.searchCustomer(query);
         else
             customers = customerService.getAllCustomers();
