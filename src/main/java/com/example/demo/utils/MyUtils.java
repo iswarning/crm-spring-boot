@@ -3,7 +3,7 @@ public class MyUtils
   // check if string contain number
   public static Integer stringContainDigit(final String str) {                
     
-    if(StringUtils.hasText())
+    if(StringUtils.hasText(str))
     {
       StringBuilder sb = new StringBuilder();
       for(char c : str.toCharArray()){
