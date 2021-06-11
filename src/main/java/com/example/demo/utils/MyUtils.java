@@ -5,7 +5,6 @@ public class MyUtils
     
     if(StringUtils.hasText(str))
     {
-      StringBuilder sb = new StringBuilder();
       for(char c : str.toCharArray()){
           if(Character.isDigit(c)){
               return 1;
@@ -16,5 +15,5 @@ public class MyUtils
     }
     
     return -1;
-}
+  }
 }
