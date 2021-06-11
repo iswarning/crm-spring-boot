@@ -8,10 +8,9 @@ public class MyUtils
       for(char c : str.toCharArray()){
           if(Character.isDigit(c)){
               return 1;
-          } else {
-              return 0;                
           }
       }
+      return 0;
     }
     
     return -1;
